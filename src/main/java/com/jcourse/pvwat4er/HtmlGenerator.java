@@ -31,7 +31,6 @@ public class HtmlGenerator {
 
     }
 
-
     public final static String HEADER = "<html>\n" +
             "<head>\n" +
             "    <title></title>\n" +
@@ -43,19 +42,9 @@ public class HtmlGenerator {
             "        <td>Size</td>\n" +
             "        <td>Last Modified</td>\n" +
             "    </tr>";
-    public final static String ROW = "</table>\n" +
+    public final static String CONTENT = "</table>\n" +
             "</body>\n" +
             "</html>";
-
-    public static void main(String[] args) {
-        try {
-            HtmlGenerator index = new HtmlGenerator(args[0]);
-            index.genHtml(null);
-            index.createFile(args[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public String[] genHtml(String parent[]) {
         String parentDir;
@@ -78,7 +67,7 @@ public class HtmlGenerator {
 
             if (parentDir != null) {
                 i = 2;
-                href[1] = ("<tr><td><a href = " + "'" + "http://localhost:8080/" + parentDir + "'>" + " .. </a></td><td></td><td>"
+                href[1] = ("<tr><td><a href=\"/%s\">%s</a></td><td></td><td>"
                         + (new Date(file.getParentFile().lastModified()).toString()) + "</td>");
             }
 
@@ -90,9 +79,9 @@ public class HtmlGenerator {
         for (File srt : s) {
             if (parent != null) {
                 System.out.println("srt.getName() is " + srt.getName());
-                name = "http://localhost:8080/" + subDir + srt.getName();
+                name = subDir + srt.getName();
                 System.out.println("name is " + name);
-            } else name = "http://localhost:8080/" + srt.getName();
+            } else name = srt.getName();
 
             String time = new Date(srt.lastModified()).toString();
 
@@ -107,12 +96,12 @@ public class HtmlGenerator {
             }
             i++;
         }
-        href[href.length - 1] = ROW;
+        href[href.length - 1] = CONTENT;
 
         return href;
     }
 
-    
+
     public void createFile(String args) throws IOException {
 
         FileOutputStream outputStream = null;
@@ -135,4 +124,15 @@ public class HtmlGenerator {
             if (outputStream != null) outputStream.close();
         }
     }
+
+    public static void main(String[] args) {
+        try {
+            HtmlGenerator index = new HtmlGenerator(args[0]);
+            index.genHtml(null);
+            index.createFile(args[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
